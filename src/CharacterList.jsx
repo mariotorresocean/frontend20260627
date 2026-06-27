@@ -4,8 +4,10 @@ export default function CharacterList() {
     const [characters, setCharacters] = useState([])
     const [selectedCharacter, setSelectedCharacter] = useState()
 
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(42)
     const [total,setTotal] = useState(0)
+    const [hasNextPage, setHasNextPage] = useState(null)
+
 
     const generoPtBr = {
         Male: "Masculino",
@@ -15,12 +17,13 @@ export default function CharacterList() {
     }
 
     useEffect(() => {
-        fetch('https://rickandmortyapi.com/api/character/?page=2')
+        fetch(`https://rickandmortyapi.com/api/character/?page=${page}`)
         .then((response) => response.json())
         .then((data) => {
             console.log(data);
             setCharacters(data.results);
             setTotal(data.info.count);
+            setHasNextPage(data.info.next!=null)
         })
         .catch((error) => console.error('Erro!!! Detalhes:', error))
     }, []);
@@ -38,6 +41,8 @@ export default function CharacterList() {
                 </div>
             )}
             <h1>Lista de personagens ({characters.length}/{total})</h1>
+            <h3>Página atual: {page}</h3>
+            <h3>Tem próxima página? {hasNextPage ? 'Sim' : 'Não'}</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px,1fr))', gap:'16px'}}>
                 {characters.map((personagem) => (
                     <div
