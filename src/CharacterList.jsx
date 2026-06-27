@@ -4,7 +4,7 @@ export default function CharacterList() {
     const [characters, setCharacters] = useState([])
     const [selectedCharacter, setSelectedCharacter] = useState()
 
-    const [page, setPage] = useState(42)
+    const [page, setPage] = useState(1)
     const [total,setTotal] = useState(0)
     const [hasNextPage, setHasNextPage] = useState(null)
 
@@ -16,16 +16,34 @@ export default function CharacterList() {
         unknown: "Desconhecido"
     }
 
+    function loadMore() {
+        const nextPage = page + 1;
+        console.log('carregando...',nextPage)
+        loadPage(nextPage);
+    }
+
+    function loadPage(pageNumber) {
+        fetch(`https://rickandmortyapi.com/api/character/?page=${pageNumber}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                setCharacters((atuais) => [...atuais, ...data.results]);
+                setHasNextPage(data.info.next!=null)
+                setPage(pageNumber)
+            })
+            .catch((error) => console.error('Erro!!! Detalhes:', error))
+    }
+
     useEffect(() => {
         fetch(`https://rickandmortyapi.com/api/character/?page=${page}`)
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-            setCharacters(data.results);
-            setTotal(data.info.count);
-            setHasNextPage(data.info.next!=null)
-        })
-        .catch((error) => console.error('Erro!!! Detalhes:', error))
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                setCharacters(data.results);
+                setTotal(data.info.count);
+                setHasNextPage(data.info.next!=null)
+            })
+            .catch((error) => console.error('Erro!!! Detalhes:', error))
     }, []);
 
     return (
@@ -43,6 +61,9 @@ export default function CharacterList() {
             <h1>Lista de personagens ({characters.length}/{total})</h1>
             <h3>Página atual: {page}</h3>
             <h3>Tem próxima página? {hasNextPage ? 'Sim' : 'Não'}</h3>
+            {hasNextPage && (
+                <button onClick={loadMore}>Carregar mais</button>
+            )}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px,1fr))', gap:'16px'}}>
                 {characters.map((personagem) => (
                     <div
