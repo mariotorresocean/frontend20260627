@@ -13,11 +13,13 @@ export default function CharacterList() {
     return (
         <div>
             <h1>Lista de personagens</h1>
-            <ul>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill minmax(200px,1fr))', gap:'16px'}}>
                 {characters.map((personagem) => (
-                    <li>{personagem.name}</li>
+                    <div style={{ border: '1px solid #ccc', padding: '16px', background:'#fff'}}>
+                        <h3>{personagem.name}</h3>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     )
 }
