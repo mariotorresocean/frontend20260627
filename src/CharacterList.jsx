@@ -4,6 +4,9 @@ export default function CharacterList() {
     const [characters, setCharacters] = useState([])
     const [selectedCharacter, setSelectedCharacter] = useState()
 
+    const [page, setPage] = useState(1)
+    const [total,setTotal] = useState(0)
+
     const generoPtBr = {
         Male: "Masculino",
         Female: "Feminino",
@@ -12,9 +15,13 @@ export default function CharacterList() {
     }
 
     useEffect(() => {
-        fetch('https://rickandmortyapi.com/api/character')
+        fetch('https://rickandmortyapi.com/api/character/?page=2')
         .then((response) => response.json())
-        .then((data) => setCharacters(data.results))
+        .then((data) => {
+            console.log(data);
+            setCharacters(data.results);
+            setTotal(data.info.count);
+        })
         .catch((error) => console.error('Erro!!! Detalhes:', error))
     }, []);
 
@@ -30,10 +37,12 @@ export default function CharacterList() {
                     <button onClick={() => setSelectedCharacter(null)}>Fechar</button>
                 </div>
             )}
-            <h1>Lista de personagens</h1>
+            <h1>Lista de personagens ({characters.length}/{total})</h1>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px,1fr))', gap:'16px'}}>
                 {characters.map((personagem) => (
-                    <div style={{ border: '1px solid #ccc', padding: '16px', background:'#fff'}}
+                    <div
+                        key={personagem.id}
+                        style={{ border: '1px solid #ccc', padding: '16px', background:'#fff'}}
                         onClick={()=>setSelectedCharacter(personagem)}
                     >
                         <h3>{personagem.name}</h3>
