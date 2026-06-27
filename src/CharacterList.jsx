@@ -4,6 +4,13 @@ export default function CharacterList() {
     const [characters, setCharacters] = useState([])
     const [selectedCharacter, setSelectedCharacter] = useState()
 
+    const generoPtBr = {
+        Male: "Masculino",
+        Female: "Feminino",
+        Genderless:"Sem gênero",
+        unknown: "Desconhecido"
+    }
+
     useEffect(() => {
         fetch('https://rickandmortyapi.com/api/character')
         .then((response) => response.json())
@@ -18,7 +25,7 @@ export default function CharacterList() {
                     <h2>{selectedCharacter.name}</h2>
                     <p><strong>Status:</strong> {selectedCharacter.status}</p>
                     <p><strong>Espécie:</strong> {selectedCharacter.species}</p>
-                    <p><strong>Genero:</strong> {selectedCharacter.gender}</p>
+                    <p><strong>Genero:</strong> {generoPtBr[selectedCharacter.gender]}</p>
                     <p><strong>Origem:</strong> {selectedCharacter.origin.name}</p>
                     <button onClick={() => setSelectedCharacter(null)}>Fechar</button>
                 </div>
