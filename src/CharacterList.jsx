@@ -17,6 +17,7 @@ export default function CharacterList() {
                 {characters.map((personagem) => (
                     <div style={{ border: '1px solid #ccc', padding: '16px', background:'#fff'}}>
                         <h3>{personagem.name}</h3>
+                        <img src={personagem.image} style={{width:'200px', borderRadius:'15px'}} />
                     </div>
                 ))}
             </div>
